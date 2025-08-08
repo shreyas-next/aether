@@ -1,61 +1,34 @@
-"use client";
-
-import { useClerk } from "@clerk/nextjs";
-import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
-import UserAccount from "./user-account";
-import React from "react";
-import { ChevronDownIcon, PanelRightIcon, PenSquareIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { Chat } from "@/actions/chat";
 import { cn } from "@/utils";
-import { useSidebar } from "@/hooks";
+import { User } from "@supabase/supabase-js";
+import Link from "next/link";
 import Icons from "./global/icons";
 import MobileSidebar from "./mobile-sidebar";
-import { User } from "@supabase/supabase-js";
+import { buttonVariants } from "./ui/button";
+import UserAccount from "./user-account";
 
 interface Props {
-    user: User
+    user: User;
+    chats: Chat[];
 }
 
-const MobileHeader = ({ user }: Props) => {
-
-    const router = useRouter();
-
-    const { isOpen: isOpenSidebar, setIsOpen: setIsOpenSidebar } = useSidebar();
-
-    const pathname = usePathname();
-
+const MobileHeader = ({ user, chats }: Props) => {
     return (
-        <header className="fixed inset-x-0 top-0 z-50 w-full px-4 h-14 block sm:hidden">
+        <header className="fixed inset-x-0 top-0 z-50 w-full px-3 h-14 bg-background border-b border-border/80 block lg:hidden">
             <div className="flex items-center justify-between w-full h-full text-muted-foreground">
                 <div className={cn(
                     "flex items-center",
-                    pathname === "/i" ? "flex" : "hidden"
+                    user ? "flex" : "hidden"
                 )}>
-                    <MobileSidebar />
+                    <MobileSidebar chats={chats} />
                 </div>
 
-                {user ? (
-                    <div className="flex items-center">
-                        <Button
-                            variant="ghost"
-                            className={cn(
-                                "gap-x-1 transition transform duration-300",
-                                // isOpenSidebar ? "translate-x-44" : "translate-x-0"
-                            )}
-                        >
-                            <span className="text-lg font-medium">
-                                luro
-                            </span>
-                            <ChevronDownIcon className="w-4 h-4" />
-                        </Button>
-                    </div>
-                ) : (
+                {!user && (
                     <Link href="/">
-                        <Icons.iconw className="w-7 h-7 hidden dark:block" />
-                        <Icons.icon className="w-7 h-7 block dark:hidden" />
+                        <Icons.icon className="size-6 block" />
                     </Link>
                 )}
+
                 <div className="flex items-center">
                     {user ? (
                         <UserAccount user={user} />

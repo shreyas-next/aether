@@ -1,8 +1,9 @@
-import { cn } from "./helpers";
+import { cn, capitalizeFirstLetter } from "./helpers";
 import { generateMetadata } from "./metadata";
 
 
 export {
     cn,
     generateMetadata,
+    capitalizeFirstLetter,
 }

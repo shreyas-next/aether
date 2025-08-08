@@ -8,8 +8,8 @@ export const generateMetadata = ({
         icon: [
             {
                 rel: "icon",
-                sizes: "512x512",
-                url: "/logo.png",
+                sizes: "32x32",
+                url: "/icons/icon.svg",
             },
         ]
     }
@@ -22,6 +22,7 @@ export const generateMetadata = ({
             rel: string;
             sizes: string;
             url: string;
+            media?: string;
         }[];
     }
     noIndex?: boolean;

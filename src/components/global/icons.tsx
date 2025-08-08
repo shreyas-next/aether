@@ -82,7 +82,7 @@ const Icons = {
     ),
     panel: (props: LucideProps) => (
         <svg {...props} width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 1H5C2.79086 1 1 2.79086 1 5V13C1 15.2091 2.79086 17 5 17H9M9 1V17M9 1H16C18.2091 1 20 2.79086 20 5V13C20 15.2091 18.2091 17 16 17H9M4.5 5.5H5.5M5.5 9H4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M9 1H5C2.79086 1 1 2.79086 1 5V13C1 15.2091 2.79086 17 5 17H9M9 1V17M9 1H16C18.2091 1 20 2.79086 20 5V13C20 15.2091 18.2091 17 16 17H9M4.5 5.5H5.5M5.5 9H4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
     ),
     create: (props: LucideProps) => (
@@ -97,6 +97,33 @@ const Icons = {
     ),
     zap: (props: LucideProps) => (
         <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.9996 3L5.06859 12.6934C4.72703 13.1109 4.55625 13.3196 4.55471 13.4956C4.55336 13.6486 4.62218 13.7939 4.74148 13.8897C4.87867 14 5.14837 14 5.68776 14H11.9996L10.9996 21L18.9305 11.3066C19.2721 10.8891 19.4429 10.6804 19.4444 10.5044C19.4458 10.3514 19.377 10.2061 19.2577 10.1103C19.1205 10 18.8508 10 18.3114 10H11.9996L12.9996 3Z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
+    ),
+    edit: (props: LucideProps) => (
+        <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    ),
+    pen: (props: LucideProps) => (
+        <svg {...props} width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.3631 3.65201L12.8431 2.17201C13.0288 1.98621 13.2493 1.83882 13.492 1.73826C13.7347 1.6377 13.9948 1.58594 14.2576 1.58594C14.5203 1.58594 14.7804 1.6377 15.0231 1.73826C15.2658 1.83882 15.4863 1.98621 15.6721 2.17201L17.0861 3.58601C17.461 3.96107 17.6716 4.46968 17.6716 5.00001C17.6716 5.53034 17.461 6.03895 17.0861 6.41401L15.6061 7.89401M11.3631 3.65201L1.74705 13.267C1.41504 13.599 1.21042 14.0373 1.16905 14.505L0.927053 17.245C0.914056 17.3907 0.933164 17.5374 0.98303 17.6749C1.0329 17.8123 1.11231 17.9372 1.21566 18.0407C1.31902 18.1441 1.44381 18.2236 1.58124 18.2736C1.71866 18.3236 1.86538 18.3429 2.01105 18.33L4.75105 18.088C5.21948 18.0471 5.65852 17.8425 5.99105 17.51L15.6061 7.89401M11.3631 3.65201L15.6061 7.89401" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    ),
+    search: (props: LucideProps) => (
+        <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M22 22L20 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    ),
+    delete: (props: LucideProps) => (
+        <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 5.97998C17.67 5.64998 14.32 5.47998 10.98 5.47998C9 5.47998 7.02 5.57998 5.04 5.77998L3 5.97998" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M8.5 4.97L8.72 3.66C8.88 2.71 9 2 10.69 2H13.31C15 2 15.13 2.75 15.28 3.67L15.5 4.97" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M18.85 9.14001L18.2 19.21C18.09 20.78 18 22 15.21 22H8.79002C6.00002 22 5.91002 20.78 5.80002 19.21L5.15002 9.14001" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M10.33 16.5H13.66" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M9.5 12.5H14.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
     ),
 };
 

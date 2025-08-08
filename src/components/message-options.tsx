@@ -1,0 +1,148 @@
+"use client";
+
+import { Message } from "@/actions/chat";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, } from "@/components/ui/tooltip";
+import { useVoices } from '@/hooks';
+import { cn } from '@/utils';
+import { CheckIcon, ShareIcon, ThumbsUpIcon } from "lucide-react";
+import { useState } from 'react';
+import { toast } from "sonner";
+import Icons from './global/icons';
+import ShareMessageModal from './share-message-modal';
+import { Button } from "./ui/button";
+
+interface Props {
+    message: Message;
+    role: "user" | "assistant";
+}
+
+const MessageOptions = ({ message, role }: Props) => {
+
+    const { voices, selectedVoice, setVoices, setSelectedVoice } = useVoices();
+
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [copied, setCopied] = useState<boolean>(false);
+    const [liked, setLiked] = useState<boolean>(false);
+    const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(message.content).then(() => {
+            setCopied(true);
+            console.log('Copied to clipboard', message.content);
+            toast.success("Copied to clipboard");
+            setTimeout(() => setCopied(false), 2000);
+        });
+    };
+
+    const handleLike = () => {
+        if (liked) {
+            setLiked(false);
+            toast.success("Got it, thanks for letting us know");
+        } else {
+            setLiked(true);
+            toast.success("Thank you for your feedback");
+        }
+    };
+
+    const handleSpeak = () => {
+        if (isSpeaking) {
+            speechSynthesis?.cancel();
+            setIsSpeaking(false);
+        } else {
+            const utter = new SpeechSynthesisUtterance(message.content);
+            if (selectedVoice) {
+                utter.voice = voices[0];
+            }
+            utter.onend = () => setIsSpeaking(false);
+            speechSynthesis?.speak(utter);
+            setIsSpeaking(true);
+        }
+    };
+
+    return (
+        <div className={cn(
+            "flex items-center opacity-0",
+            isSpeaking ? "opacity-100" : "group-hover/message:opacity-100",
+            role === "assistant" ? "justify-start" : "justify-end",
+        )}>
+            <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={handleCopy}
+                            className="w-8 h-8 rounded-lg text-foreground/60"
+                        >
+                            {copied ? <CheckIcon className="w-4 h-4" /> : <Icons.copy className="w-4 h-4" />}
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        {copied ? "Copied!" : "Copy"}
+                    </TooltipContent>
+                </Tooltip>
+
+                {role === "assistant" && (
+                    <>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    onClick={handleSpeak}
+                                    className="w-8 h-8 rounded-lg text-foreground/60"
+                                >
+                                    {isSpeaking ? <Icons.stop className="w-4 h-4" /> : <Icons.volume className="w-4 h-4" />}
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                {isSpeaking ? "Stop speaking" : "Read aloud"}
+                            </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    onClick={() => setIsOpen(true)}
+                                    className="w-8 h-8 rounded-lg text-foreground/60"
+                                >
+                                    <ShareIcon className="w-4 h-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Share
+                            </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    onClick={handleLike}
+                                    className="w-8 h-8 rounded-lg"
+                                >
+                                    <ThumbsUpIcon className={cn(
+                                        "w-4 h-4 transition-colors duration-300",
+                                        liked ? "fill-foreground" : "text-foreground/60"
+                                    )} />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Good response
+                            </TooltipContent>
+                        </Tooltip>
+                    </>
+                )}
+            </TooltipProvider>
+
+            <ShareMessageModal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                message={message}
+            />
+        </div>
+    )
+}
+
+export default MessageOptions

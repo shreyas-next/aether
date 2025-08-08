@@ -9,23 +9,26 @@ import Icons from "./global/icons";
 import UserAccount from "./user-account";
 import Link from "next/link";
 import { User } from "@supabase/supabase-js";
+import { useSidebar } from "@/hooks";
 
 interface Props {
     user: User
 }
 
-const Header = ({ user }: Props) => {
+const DesktopHeader = ({ user }: Props) => {
 
     const router = useRouter();
 
     const pathname = usePathname();
+
+    const { isOpen: isOpenSidebar, setIsOpen: setIsOpenSidebar } = useSidebar();
 
     useEffect(() => {
 
     }, [pathname]);
 
     return (
-        <header className="fixed inset-x-0 top-0 z-50 w-full px-3 h-14 hidden sm:block">
+        <header className="fixed inset-x-0 top-0 z-50 w-full px-3 h-14 hidden lg:block">
             <div className="flex items-center justify-between w-full h-full mx-auto">
                 <div className="flex items-center gap-x-2 text-muted-foreground">
                     <Link href="/" className="mr-2 text-foreground">
@@ -39,8 +42,9 @@ const Header = ({ user }: Props) => {
                                         size="icon"
                                         variant="ghost"
                                         className={cn(
-                                            "transition transform",
+                                            "transition transform duration-300",
                                         )}
+                                        onClick={() => setIsOpenSidebar(!isOpenSidebar)}
                                     >
                                         <Icons.panel className="size-4" />
                                     </Button>
@@ -49,7 +53,7 @@ const Header = ({ user }: Props) => {
                                     Sidebar
                                 </TooltipContent>
                             </Tooltip>
-                            <Tooltip>
+                            {/* <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button
                                         size="icon"
@@ -67,7 +71,7 @@ const Header = ({ user }: Props) => {
                                 <TooltipContent>
                                     New chat
                                 </TooltipContent>
-                            </Tooltip>
+                            </Tooltip> */}
                         </TooltipProvider>
                     )}
                 </div>
@@ -96,4 +100,4 @@ const Header = ({ user }: Props) => {
     )
 };
 
-export default Header
+export default DesktopHeader
