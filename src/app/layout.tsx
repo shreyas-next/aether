@@ -2,6 +2,7 @@ import { getUserChats } from "@/actions/chat";
 import DesktopHeader from "@/components/desktop-header";
 import DesktopSidebar from "@/components/desktop-sidebar";
 import Providers from "@/components/global/providers";
+import InstructionsModal from "@/components/instructions-modal";
 import MainWrapper from "@/components/main-wrapper";
 import MobileHeader from "@/components/mobile-header";
 import SearchModal from "@/components/search-modal";
@@ -37,6 +38,7 @@ export default async function RootLayout({
             >
                 <Providers>
                     <SearchModal chats={chats} />
+                    <InstructionsModal user={user!} />
                     <DesktopHeader user={user!} />
                     <MobileHeader user={user!} chats={chats} />
                     <div className="relative flex grow h-dvh w-full mx-auto overflow-auto -14 z-0">

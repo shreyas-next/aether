@@ -1,10 +1,8 @@
 "use server";
 
 import { createClient, google } from "@/lib";
-import { generateText, streamText } from "ai";
-import { revalidatePath, revalidateTag } from "next/cache";
-// import { createStreamableValue } from "ai/rsc";
-// import getUser from "./get-user";
+import { generateText } from "ai";
+import { revalidatePath } from "next/cache";
 
 export type Model = "models/gemini-1.5-pro-latest" | "llama3-8b-8192";
 
@@ -115,7 +113,7 @@ export const createNewChat = async (firstMessage: string): Promise<{ chatId: str
             throw new Error(`Failed to save message: ${messageError.message}`);
         }
 
-        const aiResponse = await generateAIResponse([userMessage], firstMessage);
+        const aiResponse = await generateAIResponse([userMessage], firstMessage, user.user_metadata.instructions);
 
         const { data: aiMessage, error: aiMessageError } = await supabase
             .from('messages')
@@ -316,7 +314,7 @@ export const addMessageToChat = async (chatId: string, content: string, role: 'u
             .eq('id', chatId);
 
         const messages = await getChatMessages(chatId);
-        const aiResponse = await generateAIResponse(messages, content);
+        const aiResponse = await generateAIResponse(messages, content, user.user_metadata.instructions);
 
         const { data: aiMessage, error: aiMessageError } = await supabase
             .from('messages')
@@ -357,7 +355,7 @@ const getChatMessages = async (chatId: string): Promise<Message[]> => {
     return messages;
 };
 
-export const generateAIResponse = async (messages: Message[], userMessage: string): Promise<string> => {
+export const generateAIResponse = async (messages: Message[], userMessage: string, instructions?: string): Promise<string> => {
     try {
         const model = 'gemini-2.0-flash';
 
@@ -375,7 +373,7 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
             model: google(model),
             messages: formattedMessages,
             temperature: 0.7,
-            system: `You are a helpful AI assistant that provides well-formatted responses using Markdown. Follow these guidelines:
+            system: `You are a helpful AI assistant that provides well-formatted responses using Markdown. ${instructions ? `Here are user instructions keep them in mind: ${instructions}` : ''} Follow these guidelines:
 
                 ## Formatting Rules
                 - Use proper Markdown syntax for all formatting

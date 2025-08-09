@@ -18,7 +18,7 @@ export const signInWithGoogle = async () => {
     if (error) {
         console.log("error", error)
     }
-    console.log("data", data)
+
     redirect(data.url!);
 };
 

@@ -242,7 +242,7 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
                                     value={input}
                                     autoFocus={true}
                                     ref={textareaRef}
-                                    disabled={isLoading}
+                                    disabled={isLoading || isRecording || isTranscribing}
                                     onKeyDown={onKeyDown}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Type a message..."
@@ -260,15 +260,12 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
                                     )}
                                 >
                                     {(isRecording || isTranscribing) && (
-                                        <div className={cn(
-                                            "flex items-center gap-2 px-3 py-1 h-8 rounded-md text-xs relative font-medium transition-all",
-                                            isRecording ? "bg-red-500/10 text-red-500" : "bg-blue-500/10 text-blue-500"
-                                        )}>
+                                        <div className="flex items-center gap-2 px-3 py-1 h-8 rounded-md text-xs relative font-medium transition-all bg-blue-500/10 text-blue-500">
                                             {isRecording ? (
                                                 <>
                                                     <div className="relative flex items-center justify-center">
-                                                        <div className="size-1.5 bg-red-500/80 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                                                        <div className="size-2 bg-red-500 rounded-full animate-ping" />
+                                                        <div className="size-1.5 bg-blue-500/80 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                                        <div className="size-2 bg-blue-500 rounded-full animate-ping" />
                                                     </div>
                                                     REC {formatTime(recordingTime)}
                                                 </>

@@ -2,6 +2,7 @@
 
 import { signOut } from "@/actions";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useInstructions } from "@/hooks";
 import { User } from "@supabase/supabase-js";
 import Avvvatars from 'avvvatars-react';
 import { LogOutIcon, SettingsIcon, UserCogIcon } from "lucide-react";
@@ -12,6 +13,8 @@ import { toast } from "sonner";
 const UserAccount = ({ user }: { user: User }) => {
 
     const router = useRouter();
+
+     const { isOpen, setIsOpen } = useInstructions();
 
     const handleSignout = async () => {
         await signOut();
@@ -51,11 +54,11 @@ const UserAccount = ({ user }: { user: User }) => {
                     </p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem >
+                <DropdownMenuItem onClick={() => setIsOpen(true)}>
                     <UserCogIcon className="w-4 h-4 mr-2" />
                     Customize
                 </DropdownMenuItem>
-                <DropdownMenuItem >
+                <DropdownMenuItem>
                     <SettingsIcon className="w-4 h-4 mr-2" />
                     Settings
                 </DropdownMenuItem>

@@ -7,6 +7,7 @@ import { useCopyToClipboard } from "./use-copy-to-clipboard";
 import { useSpeech } from "./use-speech";
 import { useVoices } from "./use-voice";
 import { useSearch } from "./use-search";
+import { useInstructions } from "./use-instructions";
 
 export {
     useSidebar,
@@ -18,4 +19,5 @@ export {
     useSpeech,
     useVoices,
     useSearch,
+    useInstructions,
 }
