@@ -7,8 +7,12 @@ import Icons from "./global/icons";
 import SidebarList from "./sidebar-list";
 import { Button, buttonVariants } from "./ui/button";
 import { Chat } from "@/actions/chat";
+import { useSearch } from "@/hooks";
 
 const ChatList = ({ chats }: { chats: Chat[] }) => {
+
+    const { isOpen, setIsOpen } = useSearch();
+
     return (
         <div className="h-full w-full flex flex-col lg:pt-14">
             <div className="my-2 lg:px-2">
@@ -24,6 +28,7 @@ const ChatList = ({ chats }: { chats: Chat[] }) => {
                 </Link>
                 <Button
                     variant="ghost"
+                    onClick={() => setIsOpen(true)}
                     className="w-full gap-x-1.5 justify-start px-2.5 text-foreground/80 hover:bg-neutral-200/40 font-normal"
                 >
                     <Icons.search className="size-[15px]" />
@@ -41,7 +46,7 @@ const ChatList = ({ chats }: { chats: Chat[] }) => {
                         {Array.from({ length: 10 }).map((_, i) => (
                             <div
                                 key={i}
-                                className="w-full h-6 rounded-md shrink-0 animate-pulse bg-zinc-200 dark:bg-zinc-800"
+                                className="w-full h-5 rounded-md shrink-0 animate-pulse bg-muted"
                             />
                         ))}
                     </div>

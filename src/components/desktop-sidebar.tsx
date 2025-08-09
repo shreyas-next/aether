@@ -3,8 +3,8 @@
 import useSidebar from "@/hooks/use-sidebar";
 import { cn } from "@/utils";
 import ChatList from "./chat-list";
-import { Chat } from "@/actions/chat";
-import { useEffect } from "react";
+import { Chat, getUserChats } from "@/actions/chat";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { User } from "@supabase/supabase-js";
 
@@ -18,12 +18,6 @@ const DesktopSidebar = ({ user, chats }: Props) => {
     const { id } = useParams<{ id: string }>();
 
     const { isOpen, setIsOpen } = useSidebar();
-
-    useEffect(() => {
-        if (!user) {
-            setIsOpen(false);
-        }
-    }, [user]);
 
     if (!user) {
         return null;

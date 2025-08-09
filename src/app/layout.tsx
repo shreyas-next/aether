@@ -4,6 +4,7 @@ import DesktopSidebar from "@/components/desktop-sidebar";
 import Providers from "@/components/global/providers";
 import MainWrapper from "@/components/main-wrapper";
 import MobileHeader from "@/components/mobile-header";
+import SearchModal from "@/components/search-modal";
 import { createClient } from "@/lib";
 import "@/styles/globals.css";
 import { cn, generateMetadata } from "@/utils";
@@ -35,6 +36,7 @@ export default async function RootLayout({
                 )}
             >
                 <Providers>
+                    <SearchModal chats={chats} />
                     <DesktopHeader user={user!} />
                     <MobileHeader user={user!} chats={chats} />
                     <div className="relative flex grow h-dvh w-full mx-auto overflow-auto -14 z-0">

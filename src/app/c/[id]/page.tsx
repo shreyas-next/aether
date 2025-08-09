@@ -1,7 +1,8 @@
 import { getChatWithMessages } from "@/actions/chat";
 import ChatContainer from "@/components/chat-container";
+import ChatContainer2 from "@/components/test/container2";
 import { createClient } from "@/lib";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 interface Props {
     params: Promise<{
@@ -14,7 +15,7 @@ const ChatIdPage = async ({ params }: Props) => {
     const { id } = await params;
 
     if (!id) {
-        redirect("/");
+        notFound();
     }
 
     const supabase = await createClient();

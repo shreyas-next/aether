@@ -86,11 +86,13 @@ export const createNewChat = async (firstMessage: string): Promise<{ chatId: str
             throw new Error('Not authenticated');
         }
 
+        const title = await generateTitle(firstMessage);
+
         const { data: chat, error: chatError } = await supabase
             .from('chats')
             .insert({
                 user_id: user.id,
-                title: firstMessage.slice(0, 50) + (firstMessage.length > 50 ? '...' : '')
+                title: title || firstMessage.slice(0, 50) + (firstMessage.length > 50 ? '...' : '')
             })
             .select()
             .single();
@@ -375,50 +377,70 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
             temperature: 0.7,
             system: `You are a helpful AI assistant that provides well-formatted responses using Markdown. Follow these guidelines:
 
-## Formatting Rules
-- Use proper Markdown syntax for all formatting
-- For code blocks, specify the language after the opening backticks
-- Use tables for tabular data
-- Use headings to structure your response
-- Use lists (numbered or bulleted) for step-by-step instructions
+                ## Formatting Rules
+                - Use proper Markdown syntax for all formatting
+                - For code blocks, specify the language after the opening backticks
+                - Use tables for tabular data
+                - Use headings to structure your response
+                - Use lists (numbered or bulleted) for step-by-step instructions
 
-## Response Style
-- Be concise but thorough
-- Use bold (**text**) for emphasis
-- Use italics (*text*) for subtle emphasis
-- Use code blocks with language specification for code examples
-- Use blockquotes for important notes or warnings
-- Use tables for comparing items or showing structured data
+                ## Response Style
+                - Be concise but thorough
+                - Use bold (**text**) for emphasis
+                - Use italics (*text*) for subtle emphasis
+                - Use code blocks with language specification for code examples
+                - Use blockquotes for important notes or warnings
+                - Use tables for comparing items or showing structured data
 
-## Code Examples
-\`\`\`typescript
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-\`\`\`
+                ## Code Examples
+                \`\`\`typescript
+                interface User {
+                id: string;
+                name: string;
+                email: string;
+                }
+                \`\`\`
 
-## Tables
-| Feature | Description | Status |
-|---------|-------------|--------|
-| Markdown | Support for rich text | ✅ |
-| Tables | Data organization | ✅ |
-| Code Blocks | Syntax highlighting | ✅ |
+                ## Tables
+                | Feature | Description | Status |
+                |---------|-------------|--------|
+                | Markdown | Support for rich text | ✅ |
+                | Tables | Data organization | ✅ |
+                | Code Blocks | Syntax highlighting | ✅ |
 
-## Lists
-1. First item
-2. Second item
-   - Nested item
-   - Another nested item
+                ## Lists
+                1. First item
+                2. Second item
+                - Nested item
+                - Another nested item
 
-Always format your responses properly and use appropriate markdown elements to enhance readability.`
+                Always format your responses properly and use appropriate markdown elements to enhance readability.
+            `,
         });
 
         return text;
 
     } catch (error) {
         console.error('Error generating AI response:', error);
+        return 'Sorry, I encountered an error processing your request. Please try again.';
+    }
+};
+
+const generateTitle = async (message: string): Promise<string> => {
+    try {
+        const { text } = await generateText({
+            model: google('gemini-2.0-flash'),
+            prompt: message,
+            system: `\n
+            - you will generate a short title based on the first message a user begins a conversation with
+            - ensure it is not more than 50 characters long
+            - the title should be a summary of the user's message
+            - do not use quotes or colons
+            - do not use any special characters or symbols`,
+        });
+        return text;
+    } catch (error) {
+        console.error('Error generating title:', error);
         return 'Sorry, I encountered an error processing your request. Please try again.';
     }
 };

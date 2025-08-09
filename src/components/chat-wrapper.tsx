@@ -44,15 +44,6 @@ const ChatWrapper = ({ user, messages, oMessages, isLoading, isAiLoading, onSubm
         setInput("");
         setError(null);
 
-        // const userMessage: Message = {
-        //     id: uuidv4(),
-        //     chat_id: params.get("id") || "",
-        //     content: input,
-        //     role: "user",
-        //     created_at: new Date().toISOString(),
-        // };
-
-
         try {
             await onSubmit(input);
         } catch (error) {

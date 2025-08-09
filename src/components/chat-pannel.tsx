@@ -40,9 +40,9 @@ const ChatPannel = ({ user, error, messages, isLoading, isAiLoading }: Props) =>
         messagesRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // useEffect(() => {
-    //     scrollToBottom();
-    // }, [messages]);
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages.length]);
 
     useEffect(() => {
         if (messages.length > 0) {

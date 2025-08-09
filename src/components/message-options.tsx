@@ -61,8 +61,8 @@ const MessageOptions = ({ message, role }: Props) => {
 
     return (
         <div className={cn(
-            "flex items-center opacity-0",
-            isSpeaking ? "opacity-100" : "group-hover/message:opacity-100",
+            "flex items-center opacity-0 group-hover/message:opacity-100",
+            isSpeaking && "opacity-100",
             role === "assistant" ? "justify-start" : "justify-end",
         )}>
             <TooltipProvider delayDuration={0}>
@@ -72,9 +72,9 @@ const MessageOptions = ({ message, role }: Props) => {
                             size="icon"
                             variant="ghost"
                             onClick={handleCopy}
-                            className="w-8 h-8 rounded-lg text-foreground/60"
+                            className="size-8 rounded-lg text-muted-foreground"
                         >
-                            {copied ? <CheckIcon className="w-4 h-4" /> : <Icons.copy className="w-4 h-4" />}
+                            {copied ? <CheckIcon className="size-4" /> : <Icons.copy className="size-4" />}
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -90,9 +90,9 @@ const MessageOptions = ({ message, role }: Props) => {
                                     size="icon"
                                     variant="ghost"
                                     onClick={handleSpeak}
-                                    className="w-8 h-8 rounded-lg text-foreground/60"
+                                    className="size-8 rounded-lg text-muted-foreground"
                                 >
-                                    {isSpeaking ? <Icons.stop className="w-4 h-4" /> : <Icons.volume className="w-4 h-4" />}
+                                    {isSpeaking ? <Icons.stop className="size-4" /> : <Icons.volume className="size-4" />}
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -105,9 +105,9 @@ const MessageOptions = ({ message, role }: Props) => {
                                     size="icon"
                                     variant="ghost"
                                     onClick={() => setIsOpen(true)}
-                                    className="w-8 h-8 rounded-lg text-foreground/60"
+                                    className="size-8 rounded-lg text-muted-foreground"
                                 >
-                                    <ShareIcon className="w-4 h-4" />
+                                    <Icons.share className="size-4" />
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -120,11 +120,11 @@ const MessageOptions = ({ message, role }: Props) => {
                                     size="icon"
                                     variant="ghost"
                                     onClick={handleLike}
-                                    className="w-8 h-8 rounded-lg"
+                                    className="size-8 rounded-lg"
                                 >
                                     <ThumbsUpIcon className={cn(
-                                        "w-4 h-4 transition-colors duration-300",
-                                        liked ? "fill-foreground" : "text-foreground/60"
+                                        "size-4 transition-colors duration-300",
+                                        liked ? "fill-foreground" : "text-muted-foreground"
                                     )} />
                                 </Button>
                             </TooltipTrigger>

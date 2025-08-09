@@ -29,7 +29,7 @@ const ChatMessage = ({ index, message, messages, isLoading }: Props) => {
         <div
             className={cn(
                 "flex gap-x-2 p-2 group/message",
-                isUser ? "text-start" : "items-start my-5",
+                isUser ? "text-start" : "items-start my-3",
                 isLastMessage ? "pb-40" : "",
             )}
         >
@@ -63,7 +63,7 @@ const ChatMessage = ({ index, message, messages, isLoading }: Props) => {
                         </Markdown>
                     )}
                 </div>
-                {!isLoading && (
+                {!isLoading && !showLoading && (
                     <MessageOptions
                         message={message}
                         role={message.role}

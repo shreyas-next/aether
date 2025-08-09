@@ -65,7 +65,7 @@ const SidebarItem = ({ chat, index }: Props) => {
     }, [isEditable]);
 
     return (
-        <Container delay={0.1 * index + 0.1}>
+        <Container delay={0.5 * index + 0.1}>
             <li className="relative">
                 <Link href={`/c/${chat?.id}`} className="pl-2.5 pr-1 flex items-center justify-between py-2 rounded-lg cursor-pointer hover:bg-neutral-200/40 w-full group/id">
                     <div className="flex items-center w-full gap-2">
