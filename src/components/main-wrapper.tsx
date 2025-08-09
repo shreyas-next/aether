@@ -2,13 +2,14 @@
 
 import { useSidebar } from "@/hooks";
 import { cn } from "@/utils";
+import { User } from "@supabase/supabase-js";
 
 interface Props {
-
+    user: User;
     children: React.ReactNode;
 }
 
-const MainWrapper = ({ children }: Props) => {
+const MainWrapper = ({ children, user }: Props) => {
 
     const { isOpen: isOpenSidebar } = useSidebar();
 
@@ -16,7 +17,7 @@ const MainWrapper = ({ children }: Props) => {
         <div
             className={cn(
                 "w-full h-dvh mx-auto transition-all duration-300 ease-in-out",
-                isOpenSidebar ? "lg:ml-68" : "lg:ml-0"
+                isOpenSidebar && user ? "lg:ml-68" : "lg:ml-0"
             )}
         >
             {children}

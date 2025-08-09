@@ -41,7 +41,7 @@ export default async function RootLayout({
                     <MobileHeader user={user!} chats={chats} />
                     <div className="relative flex grow h-dvh w-full mx-auto overflow-auto -14 z-0">
                         <DesktopSidebar user={user!} chats={chats} />
-                        <MainWrapper>
+                        <MainWrapper user={user!}>
                             {children}
                         </MainWrapper>
                     </div>

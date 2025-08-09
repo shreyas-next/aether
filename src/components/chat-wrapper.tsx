@@ -1,14 +1,11 @@
 "use client";
 
-import { useInput } from "@/hooks/use-input";
-import { useClerk } from "@clerk/nextjs";
-import React, { useEffect, useState } from 'react';
-import { toast } from "sonner";
-import ChatPannel from "./chat-pannel";
-import ChatInput from "./chat-input";
-import { usePathname, useParams, useSearchParams } from "next/navigation";
 import { Message } from "@/actions";
+import { useInput } from "@/hooks/use-input";
 import { User } from "@supabase/supabase-js";
+import React, { useState } from 'react';
+import ChatInput from "./chat-input";
+import ChatPannel from "./chat-pannel";
 
 interface Props {
     user: User | null;
@@ -58,7 +55,6 @@ const ChatWrapper = ({ user, messages, oMessages, isLoading, isAiLoading, onSubm
     //     setMessages(initialMessages);
     // }, [initialMessages]);
 
-
     return (
         <div className="relative flex-1 size-full">
             <ChatPannel
@@ -69,7 +65,6 @@ const ChatWrapper = ({ user, messages, oMessages, isLoading, isAiLoading, onSubm
                 isAiLoading={isAiLoading}
             />
             <ChatInput
-                messages={messages}
                 isLoading={isLoading}
                 handleSendMessage={handleSubmit}
             />
