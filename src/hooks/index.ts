@@ -8,6 +8,7 @@ import { useSpeech } from "./use-speech";
 import { useVoices } from "./use-voice";
 import { useSearch } from "./use-search";
 import { useInstructions } from "./use-instructions";
+import { useSettings } from "./use-settings";
 
 export {
     useSidebar,
@@ -20,4 +21,5 @@ export {
     useVoices,
     useSearch,
     useInstructions,
+    useSettings,
 }

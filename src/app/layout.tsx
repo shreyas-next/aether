@@ -6,6 +6,7 @@ import InstructionsModal from "@/components/instructions-modal";
 import MainWrapper from "@/components/main-wrapper";
 import MobileHeader from "@/components/mobile-header";
 import SearchModal from "@/components/search-modal";
+import SettingsModal from "@/components/settings-modal";
 import { createClient } from "@/lib";
 import "@/styles/globals.css";
 import { cn, generateMetadata } from "@/utils";
@@ -38,6 +39,7 @@ export default async function RootLayout({
             >
                 <Providers>
                     <SearchModal chats={chats} />
+                    <SettingsModal user={user!} />
                     <InstructionsModal user={user!} />
                     <DesktopHeader user={user!} />
                     <MobileHeader user={user!} chats={chats} />

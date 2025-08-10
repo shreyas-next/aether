@@ -1,17 +1,13 @@
 "use client";
 
 import { Message as MessageProps } from "@/actions/chat";
-import { PROMPTS } from "@/constants";
 import { useInput } from "@/hooks/use-input";
-import Image from "next/image";
-import { useEffect, useRef, useState } from 'react';
-import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
-import EmptyState from "./empty-state";
-import { TriangleAlertIcon } from "lucide-react";
-import ChatMessage from "./chat-message";
 import { User } from "@supabase/supabase-js";
+import { TriangleAlertIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from 'react';
+import ChatMessage from "./chat-message";
+import EmptyState from "./empty-state";
 
 interface Props {
     user: User | null;

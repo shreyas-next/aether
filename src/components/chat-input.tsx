@@ -6,19 +6,27 @@ import useEnterSubmit from "@/hooks/use-enter-submit";
 import { useHeight } from "@/hooks/use-height";
 import { useInput } from "@/hooks/use-input";
 import { cn } from "@/utils";
-import { ArrowUpIcon, CheckIcon, Loader2Icon, XIcon } from "lucide-react";
+import { ArrowUpIcon, CheckIcon, Loader2Icon, PlusIcon, XIcon } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import Icons from './global/icons';
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import { formatFileSize, formatTime } from '@/utils/helpers';
+
+interface UploadedFile {
+    id: string;
+    file: File;
+    preview?: string;
+    size: string;
+}
 
 interface Props {
     isLoading: boolean;
     handleSendMessage: (e: React.FormEvent) => Promise<void>;
 }
 
-const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
+const ChatInput2 = ({ isLoading, handleSendMessage }: Props) => {
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -32,10 +40,11 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
 
     const { setHeight } = useHeight();
 
-    const [isRecording, setIsRecording] = useState(false);
-    const [isTranscribing, setIsTranscribing] = useState(false);
-    const [recordingTime, setRecordingTime] = useState(0);
-    const [micSupported, setMicSupported] = useState(false);
+    const [isRecording, setIsRecording] = useState<boolean>(false);
+    const [isTranscribing, setIsTranscribing] = useState<boolean>(false);
+    const [recordingTime, setRecordingTime] = useState<number>(0);
+    const [micSupported, setMicSupported] = useState<boolean>(false);
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
     useEffect(() => {
         setMicSupported(!!navigator.mediaDevices?.getUserMedia);
@@ -75,7 +84,6 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
 
             if (transcript && !transcript.includes('[No speech detected]')) {
                 setInput(transcript);
-                toast.success("Voice transcribed successfully!");
             } else {
                 toast('No speech detected in recording');
             }
@@ -197,11 +205,43 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
         }
     }, [isRecording, startRecording, completeRecording]);
 
-    const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files) return;
+
+        const newFiles = Array.from(files).map(file => {
+            const id = Math.random().toString(36).substring(2, 9);
+            return {
+                id,
+                file,
+                preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined,
+                size: formatFileSize(file.size)
+            };
+        });
+
+        setUploadedFiles(prev => [...prev, ...newFiles]);
+        e.target.value = ''; // Reset input to allow selecting the same file again
     };
+
+    const handleRemoveFile = (id: string) => {
+        setUploadedFiles(prev => {
+            const fileToRemove = prev.find(f => f.id === id);
+            if (fileToRemove?.preview) {
+                URL.revokeObjectURL(fileToRemove.preview);
+            }
+            return prev.filter(f => f.id !== id);
+        });
+    };
+
+    useEffect(() => {
+        return () => {
+            uploadedFiles.forEach(file => {
+                if (file.preview) {
+                    URL.revokeObjectURL(file.preview);
+                }
+            });
+        };
+    }, [uploadedFiles]);
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -231,10 +271,54 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
                     >
                         <div
                             className={cn(
-                                "flex justify-end w-full gap-x-1.5 rounded-xl p-1 transition-colors bg-background border border-border/60 dark:bg-[#262626] overflow-y-auto",
-                                textareaRef?.current && textareaRef?.current?.clientHeight > 48 && (input || "")?.trim().length ? "items-end" : "items-center",
+                                "relative w-full gap-x-1.5 rounded-xl p-1 transition-colors bg-background border border-border/60 overflow-y-auto flex flex-col z-0",
                             )}
                         >
+                            {uploadedFiles.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mb-2 max-h-24 overflow-y-hidden pt-1 pl-1">
+                                    {uploadedFiles.map((file) => (
+                                        <div
+                                            key={file.id}
+                                            className={cn(
+                                                "relative rounded-lg overflow-visible bg-muted/80 flex items-center",
+                                                file.preview ? "size-14" : "w-56 h-14"
+                                            )}
+                                        >
+                                            {file.preview ? (
+                                                <div className="w-full h-full">
+                                                    <img
+                                                        src={file.preview}
+                                                        alt={file.file.name}
+                                                        className="w-full h-full object-cover rounded-lg border border-border"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="p-2 flex items-center gap-2">
+                                                    <div className="flex items-center justify-center size-10 rounded-md bg-orange-500">
+                                                        <Icons.file className="size-5 text-white" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-medium truncate max-w-full px-1">
+                                                            {file.file.name.length > 16 ? file.file.name.slice(0, 16) + "..." : file.file.name}
+                                                        </span>
+                                                        <span className="text-xs text-muted-foreground">
+                                                            {file.size}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveFile(file.id)}
+                                                className="absolute top-1 right-1 bg-black text-white rounded-full cursor-pointer size-4 flex items-center justify-center"
+                                            >
+                                                <XIcon className="size-3" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
                             <div className="relative flex flex-col justify-center flex-1 min-w-0">
                                 <Textarea
                                     rows={1}
@@ -247,15 +331,71 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Type a message..."
                                     className={cn(
-                                        "h-auto pl-4 overflow-y-auto bg-transparent border-0 resize-none text-left focus:outline-none max-h-52 w-full",
+                                        "h-auto pl-4 overflow-y-auto bg-transparent border-0 resize-none text-left focus:outline-none min-h-20 max-h-52 w-full",
                                     )}
                                 />
                             </div>
 
+                            {/* attach */}
+                            <div className="absolute left-2 bottom-2 z-20">
+                                <TooltipProvider delayDuration={0}>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                size="icon"
+                                                type="button"
+                                                variant="ghost"
+                                                disabled={isLoading}
+                                                className="active:scale-90"
+                                            >
+                                                <label
+                                                    htmlFor="file"
+                                                    className="size-full flex items-center justify-center cursor-pointer"
+                                                >
+                                                    <input
+                                                        type="file"
+                                                        id="file"
+                                                        className="hidden"
+                                                        onChange={handleFileChange}
+                                                        accept="image/*,.pdf,.doc,.txt"
+                                                    />
+                                                    <PlusIcon className="size-4" />
+                                                </label>
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top" sideOffset={10}>
+                                            Add files
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
+
+                            {/* send btn */}
+                            <div className="absolute right-2 bottom-2 z-20">
+                                <TooltipProvider delayDuration={0}>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                size="icon"
+                                                type="submit"
+                                                disabled={isLoading || !input.trim()}
+                                                className="active:scale-90"
+                                            >
+                                                {isLoading ? <Loader2Icon className="size-4 animate-spin" /> : <ArrowUpIcon className="size-4" />}
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top" sideOffset={10}>
+                                            Send message (Enter)
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
+
+                            {/* mic */}
                             {micSupported && (
                                 <div
                                     className={cn(
-                                        "h-full flex items-center justify-center gap-x-2 z-20 mt-auto p-1 overflow-hidden",
+                                        "absolute bottom-2 right-12 z-20 flex gap-x-2",
                                         textareaRef?.current && textareaRef?.current?.clientHeight > 48 ? "items-end" : "items-center",
                                     )}
                                 >
@@ -324,23 +464,13 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
                                                         variant="ghost"
                                                         onClick={toggleRecording}
                                                         disabled={isLoading || isTranscribing}
-                                                        className="relative transition-all duration-200"
+                                                        className="relative transition-all duration-200 active:scale-90"
                                                     >
                                                         <Icons.mic className="size-4" />
                                                     </Button>
                                                 </TooltipTrigger>
                                                 <TooltipContent side="top" sideOffset={10}>
                                                     Start voice input
-                                                    {/* {isRecording ? (
-                                                        <div className="flex items-center gap-1">
-                                                            <div className="size-2 bg-red-500 rounded-full animate-pulse" />
-                                                            Recording {formatTime(recordingTime)} - Click to stop
-                                                        </div>
-                                                    ) : isTranscribing ? (
-                                                        "Processing audio..."
-                                                    ) : (
-                                                        ""
-                                                    )} */}
                                                 </TooltipContent>
                                             </Tooltip>
                                         )}
@@ -348,29 +478,7 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
                                 </div>
                             )}
 
-                            <div
-                                className={cn(
-                                    "w-10 h-full flex justify-end z-20 mt-auto p-1",
-                                    textareaRef?.current && textareaRef?.current.clientHeight > 48 ? "items-end" : "items-center",
-                                )}
-                            >
-                                <TooltipProvider delayDuration={0}>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                size="icon"
-                                                type="submit"
-                                                disabled={isLoading || !input.trim()}
-                                            >
-                                                {isLoading ? <Loader2Icon className="size-4 animate-spin" /> : <ArrowUpIcon className="size-4" />}
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent side="top" sideOffset={10}>
-                                            Send message (Enter)
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </div>
+
                         </div>
                     </form>
                 </div>
@@ -379,4 +487,4 @@ const ChatInput = ({ isLoading, handleSendMessage }: Props) => {
     )
 }
 
-export default ChatInput
+export default ChatInput2

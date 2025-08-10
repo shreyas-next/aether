@@ -24,8 +24,6 @@ const SidebarItem = ({ chat, index }: Props) => {
 
     const pathname = usePathname();
 
-    console.log(pathname);
-
     const [title, setTitle] = useState(chat?.title!);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isEditable, setIsEditable] = useState<boolean>(false);
@@ -33,7 +31,6 @@ const SidebarItem = ({ chat, index }: Props) => {
     const handleUpdateTitle = async () => {
         try {
             const updatedTitle = await updateChat(chat?.id!, title);
-            console.log(updatedTitle);
             setTitle(updatedTitle);
             setIsEditable(false);
             toast.success("Chat title updated");

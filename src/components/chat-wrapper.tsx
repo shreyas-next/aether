@@ -4,8 +4,8 @@ import { Message } from "@/actions";
 import { useInput } from "@/hooks/use-input";
 import { User } from "@supabase/supabase-js";
 import React, { useState } from 'react';
-import ChatInput from "./chat-input";
 import ChatPannel from "./chat-pannel";
+import ChatInput from "./chat-input";
 
 interface Props {
     user: User | null;

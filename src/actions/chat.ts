@@ -273,7 +273,7 @@ export const getChatWithMessages = async (chatId: string): Promise<{ chat: Chat 
     }
 };
 
-export const addMessageToChat = async (chatId: string, content: string, role: 'user' | 'assistant') => {
+export const addMessageToChat = async (chatId: string, content: string, role: 'user' | 'assistant', isSearching : boolean = false) => {
     try {
         const supabase = await createClient();
 
@@ -355,9 +355,9 @@ const getChatMessages = async (chatId: string): Promise<Message[]> => {
     return messages;
 };
 
-export const generateAIResponse = async (messages: Message[], userMessage: string, instructions?: string): Promise<string> => {
+export const generateAIResponse = async (messages: Message[], userMessage: string, instructions?: string, enableWebSearch: boolean = false): Promise<string> => {
     try {
-        const model = 'gemini-2.0-flash';
+        const model = "gemini-2.0-flash";
 
         const formattedMessages = messages.map(msg => ({
             role: msg.role as 'user' | 'assistant',
@@ -368,6 +368,10 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
             role: 'user' as const,
             content: userMessage
         });
+
+        const tools = enableWebSearch ? {
+            google_search: {}
+        } : undefined;
 
         const { text } = await generateText({
             model: google(model),
@@ -414,6 +418,7 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
 
                 Always format your responses properly and use appropriate markdown elements to enhance readability.
             `,
+            tools
         });
 
         return text;
@@ -423,6 +428,21 @@ export const generateAIResponse = async (messages: Message[], userMessage: strin
         return 'Sorry, I encountered an error processing your request. Please try again.';
     }
 };
+
+const searchWeb = async (query: string): Promise<Array<{ title: string; link: string; snippet: string }>> => {
+    try {
+        // This is a placeholder - you'll need to implement actual web search API integration
+        // For example, using the search_web tool or an external API like SerpAPI, Google Custom Search, etc.
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        if (!response.ok) {
+            throw new Error('Search failed');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Search error:', error);
+        return [];
+    }
+}
 
 const generateTitle = async (message: string): Promise<string> => {
     try {

@@ -2,7 +2,7 @@
 
 import { signOut } from "@/actions";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useInstructions } from "@/hooks";
+import { useInstructions, useSettings } from "@/hooks";
 import { User } from "@supabase/supabase-js";
 import Avvvatars from 'avvvatars-react';
 import { LogOutIcon, SettingsIcon, UserCogIcon } from "lucide-react";
@@ -15,6 +15,8 @@ const UserAccount = ({ user }: { user: User }) => {
     const router = useRouter();
 
      const { isOpen, setIsOpen } = useInstructions();
+
+     const { isOpen: isOpenSettings, setIsOpen: setIsOpenSettings } = useSettings();
 
     const handleSignout = async () => {
         await signOut();
@@ -55,16 +57,16 @@ const UserAccount = ({ user }: { user: User }) => {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setIsOpen(true)}>
-                    <UserCogIcon className="w-4 h-4 mr-2" />
+                    <UserCogIcon className="size-4 mr-2" />
                     Customize
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <SettingsIcon className="w-4 h-4 mr-2" />
+                <DropdownMenuItem onClick={() => setIsOpenSettings(true)}>
+                    <SettingsIcon className="size-4 mr-2" />
                     Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignout}>
-                    <LogOutIcon className="w-4 h-4 mr-2" />
+                    <LogOutIcon className="size-4 mr-2" />
                     Log out
                 </DropdownMenuItem>
             </DropdownMenuContent>

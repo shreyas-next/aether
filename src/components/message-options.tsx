@@ -28,7 +28,6 @@ const MessageOptions = ({ message, role }: Props) => {
     const handleCopy = () => {
         navigator.clipboard.writeText(message.content).then(() => {
             setCopied(true);
-            console.log('Copied to clipboard', message.content);
             toast.success("Copied to clipboard");
             setTimeout(() => setCopied(false), 2000);
         });
