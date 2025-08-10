@@ -52,8 +52,6 @@ const SettingsModal = ({ user }: Props) => {
 
     const { getDisplayName } = useSpeech();
 
-    const { theme, setTheme } = useTheme();
-
     const { isOpen, setIsOpen } = useSettings();
 
     const { voices, selectedVoice, setSelectedVoice } = useVoices();
@@ -63,7 +61,7 @@ const SettingsModal = ({ user }: Props) => {
     const [temperature, setTemperature] = useState<number>(7);
     const [isActive, setIsActive] = useState<string>("general");
 
-    const subscriptionLink = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_LINK || "";
+    // const subscriptionLink = process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_LINK || "";
 
     const handleSignout = async () => {
         await signOut();
